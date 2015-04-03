@@ -19,7 +19,27 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+
+### Basic GET/POST request
+
+    client = CookieHTTPClient.new("http://goo.gl/IwTffS")
+    res = client.get #=> Net::HTTPResponse
+    client.last_uri  #=> https://github.com/suzumura-ss/cookie_http_client
+
+    client = CookieHTTPClient.new("http://whois.jprs.jp/")
+    params = {'type'=>'DOM', 'key'=>'amazon.co.jp'}
+    res = client.post_form(params) #=> Net::HTTPResponse
+
+
+### Hooking redirection
+
+    client = CookieHTTPClient.new("http://goo.gl/IwTffS")
+    res = client.get{|uri|
+      # `uri` is URI of location-header.
+      # You can modify uri.
+      uri
+    }
+    
 
 ## Contributing
 

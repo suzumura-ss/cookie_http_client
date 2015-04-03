@@ -113,7 +113,7 @@ public
   # @param  block         callback when redirect with `uri`
   # @return Net::HTTPResponse
   def post_form(params, header={}, &block)
-    data = params.map{|k,v| "#{CGI.escape(k)}=#{CGI.escape(v)}"}.join('&')
+    data = params.map{|k,v| "#{CGI.escape(k.to_s)}=#{CGI.escape(v.to_s)}"}.join('&')
     post(data, header, &block)
   end
 end
