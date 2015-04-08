@@ -9,10 +9,13 @@ class CookieHTTPClient
   THIS = CookieHTTPClient
   class HTTPFound < Exception
     attr_reader :redirect_uri, :source
-    def initialize(httpFound)
+    def initialize(httpFound, uri)
       @source = httpFound
-      @redirect_uri = URI.parse(httpFound['location'])
-      @redirect_uri.path = '/' if @redirect_uri.path.empty?
+      r = URI.parse(httpFound['location'])
+      r.path = '/' if r.path.empty?
+      r.scheme = uri.scheme unless r.scheme
+      r.host   = uri.host   unless r.host
+      @redirect_uri = URI.parse(r.to_s)
     end
   end
 
@@ -48,7 +51,7 @@ protected
     h["Cookie"] = c unless c.empty?
     r = yield(http, path, h)
     @@cookie_jar.set_cookie(r['set-cookie'], uri)
-    raise HTTPFound.new(r) if r.is_a? Net::HTTPFound or r.is_a? Net::HTTPMovedPermanently
+    raise HTTPFound.new(r, uri) if r.is_a? Net::HTTPFound or r.is_a? Net::HTTPMovedPermanently
     r
   end
 
