@@ -98,6 +98,7 @@ public
   # @return Net::HTTPResponse
   def post(data, header={}, &block)
     begin
+      @last_uri = @uri
       request(@uri, header){|http, path, header2|
         http.post(path, data, header2)
       }
